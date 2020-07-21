@@ -2,7 +2,7 @@
 
 # Say hi
 echo "-------------------------------------------------------------------------"
-echo "Tooloop OS"
+echo "Tooloop OS - Tecné Version for Ubuntu 20"
 echo "-------------------------------------------------------------------------"
 echo " "
 
@@ -22,6 +22,7 @@ if [ $EUID != 0 ]; then
     exit 1
 fi
 
+sudo -u mkdir /assets
 
 # ------------------------------------------------------------------------------
 # Update
@@ -35,7 +36,7 @@ echo " "
 # Updating system first
 apt update -y
 apt dist-upgrade -y
-
+sleep 3
 
 # ------------------------------------------------------------------------------
 # Packages
@@ -47,7 +48,7 @@ echo "-------------------------------------------------------------------------"
 echo " "
 
 # Install base packages
-apt install -y --no-install-recommends \
+apt install -y \
   xorg \
   x11-xserver-utils \
   openbox \
@@ -75,6 +76,17 @@ apt install -y --no-install-recommends \
   psmisc \
   pcregrep
 
+sleep 3
+
+#install obmenu-generator to replace obmenu, as ubuntu 20 doesnt include python2
+echo 'deb http://download.opensuse.org/repositories/home:/Head_on_a_Stick:/obmenu-generator/Debian_10/ /' > /etc/apt/sources.list.d/home:Head_on_a_Stick:obmenu-generator.list
+mkdir temporal
+wget -nv https://download.opensuse.org/repositories/home:Head_on_a_Stick:obmenu-generator/Debian_10/Release.key -O temporal/Release.key
+apt-key add - < Release.key
+apt-get update
+apt-get install obmenu-generator
+sleep 3
+
 # ------------------------------------------------------------------------------
 # Config
 # ------------------------------------------------------------------------------
@@ -83,6 +95,7 @@ echo "-------------------------------------------------------------------------"
 echo "3/3 --- Configuring system"
 echo "-------------------------------------------------------------------------"
 echo " "
+sleep 3
 
 # Allow shutdown commands without password and add tooloop scripts path to sudo
 cat >/etc/sudoers.d/tooloop <<EOF
@@ -93,6 +106,7 @@ Cmnd_Alias VNC_CMNDS = /bin/systemctl start x11vnc, /bin/systemctl stop x11vnc
 # allow these commands without using a password
 tooloop     ALL=(ALL) NOPASSWD: /sbin/poweroff, /sbin/reboot, /sbin/shutdown, VNC_CMNDS
 EOF
+sleep 3
 
 # Auto login
 mkdir -p /etc/systemd/system/getty\@tty1.service.d
@@ -101,6 +115,7 @@ cat >/etc/systemd/system/getty\@tty1.service.d/autologin.conf <<EOF
 ExecStart=
 ExecStart=/sbin/agetty --skip-login --noissue --autologin "tooloop" %I
 EOF
+sleep 3
 
 # Create the /assets folder sctructure
 mkdir -p /assets/presentation
@@ -117,6 +132,7 @@ set /files/etc/default/grub/GRUB_CMDLINE_LINUX \""console=tty12\""
 set /files/etc/default/grub/GRUB_CMDLINE_LINUX_DEFAULT \""quiet loglevel=3 vga=current rd.systemd.show_status=false rd.udev.log-priority=3\""
 save
 EOF
+sleep 3
 
 update-grub2
 
@@ -138,7 +154,7 @@ cat >/etc/issue.net <<EOF
      |     |       | |       | |     |       | |       | |       |
       \___  \____ /   \____ /   \___  \____ /   \____ /  |  ____/
                                                          |
-                  Tooloop OS 0.9 alpha  |  Ubuntu 16.04  |
+                  Tooloop OS 0.9 alpha  |  Ubuntu 20.04  |
 
 
 Hint: There's a bunch of convenient aliases starting with tooloop-...
@@ -160,14 +176,17 @@ EOF
 # Copy bash config
 cp "$SCRIPT_PATH"/files/bashrc /home/tooloop/.bashrc
 chown tooloop:tooloop /home/tooloop/.bashrc
+sleep 3
 
 # Copy Openbox theme
 cp -R "$SCRIPT_PATH"/files/openbox-theme/* /usr/share/themes/
+sleep 3
 
 # Copy Openbox config
 mkdir -p /home/tooloop/.config
 mkdir -p /home/tooloop/.config/openbox
 cp -R "$SCRIPT_PATH"/files/openbox-config/* /home/tooloop/.config/openbox/
+sleep 3
 
 # Copy Openbox menu icons
 mkdir -p /home/tooloop/.config/icons
@@ -184,12 +203,14 @@ cp -R "$SCRIPT_PATH"/include/clearsans /usr/share/fonts/truetype
 mkdir -p /opt/tooloop
 cp -R "$SCRIPT_PATH"/files/scripts /opt/tooloop
 chmod +x /opt/tooloop/scripts/*
+sleep 3
 
 # Get settings server
-git clone https://github.com/vollstock/Tooloop-Settings-Server.git /opt/tooloop/settings-server
+git clone https://github.com/Tecne-Collective/Tooloop-Settings-Server.git /opt/tooloop/settings-server
 
 # Install dependencies
 /bin/bash /opt/tooloop/settings-server/install-dependencies.sh
+sleep 3
 
 # Create a systemd service for settings server
 mkdir -p /usr/lib/systemd/system/
@@ -212,8 +233,11 @@ EOF
 systemctl enable tooloop-settings-server
 systemctl start tooloop-settings-server
 
+sleep 3
 # Get example apps
-git clone https://github.com/vollstock/Tooloop-Examples.git /assets/apps
+git clone https://github.com/Tecne-Collective/Tooloop-Examples.git /assets/apps
+
+sleep 3
 
 # Create a systemd target for Xorg
 # info here: https://superuser.com/a/1128905
@@ -243,9 +267,11 @@ EOF
 
 # Create a cronjob to take a screenshot every minute
 (crontab -u tooloop -l ; echo "* * * * * env DISPLAY=:0.0 /opt/tooloop/scripts/tooloop-screenshot") | crontab -u tooloop -
+sleep 3
 
 # Create a cronjob to clean up screenshots every day at 00:00
 (crontab -u tooloop -l ; echo "0 0 * * * /opt/tooloop/scripts/tooloop-screenshots-clean") | crontab -u tooloop -
+sleep 3
 
 # make Enttec USB DMX devices accessable to the tooloop user
 usermod -aG tty tooloop
@@ -259,6 +285,11 @@ chown -R tooloop:tooloop /assets/
 chown -R tooloop:tooloop /home/tooloop/
 chown -R tooloop:tooloop /opt/tooloop/
 
+apt autoremove
+sleep 3
+
+git clone https://github.com/Tecne-Collective/internal_scripts.git
+/bin/bash internal_scripts/install_server_u20.sh
 
 echo " "
 echo "-------------------------------------------------------------------------"

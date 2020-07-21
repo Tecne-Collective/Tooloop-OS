@@ -8,7 +8,7 @@ xsetroot -solid "#000000" &
 pulseaudio --start
 
 # Start your presentation
-/bin/bash /assets/presentation/start-presentation.sh &
+#/bin/bash /assets/presentation/start-presentation.sh &
 
 # Turn screen saver off
 xset s 0 &
@@ -23,7 +23,7 @@ xset -dpms &
 xset b off &
 
 # Cleanup screenshots at reboot (there's also a cronjob at 00:01)
-tooloop-screenshots-clean &
+# tooloop-screenshots-clean &
 
 # Start xsession systemd target
 # which in turn can trigger all services depending on it

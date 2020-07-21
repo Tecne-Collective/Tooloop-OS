@@ -287,11 +287,11 @@ chown -R tooloop:tooloop /opt/tooloop/
 apt autoremove
 sleep 3
 
-git clone https://github.com/Tecne-Collective/internal_scripts.git
-/bin/bash internal_scripts/install_server_u20.sh
+#git clone https://github.com/Tecne-Collective/internal_scripts.git
+#/bin/bash internal_scripts/install_server_u20.sh
 
-rm -rf ./internal_scripts
-rm -rf ./temporal
+#rm -rf ./internal_scripts
+#rm -rf ./temporal
 
 echo " "
 echo "-------------------------------------------------------------------------"

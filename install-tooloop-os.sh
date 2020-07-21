@@ -52,7 +52,6 @@ apt install -y \
   xorg \
   x11-xserver-utils \
   openbox \
-  obmenu \
   obconf \
   chromium-browser \
   ssh \
@@ -81,8 +80,8 @@ sleep 3
 #install obmenu-generator to replace obmenu, as ubuntu 20 doesnt include python2
 echo 'deb http://download.opensuse.org/repositories/home:/Head_on_a_Stick:/obmenu-generator/Debian_10/ /' > /etc/apt/sources.list.d/home:Head_on_a_Stick:obmenu-generator.list
 mkdir temporal
-wget -nv https://download.opensuse.org/repositories/home:Head_on_a_Stick:obmenu-generator/Debian_10/Release.key -O temporal/Release.key
-apt-key add - < Release.key
+wget -nv https://download.opensuse.org/repositories/home:Head_on_a_Stick:obmenu-generator/Debian_10/Release.key -O ./temporal/Release.key
+apt-key add - < ./temporal/Release.key
 apt-get update
 apt-get install obmenu-generator
 sleep 3
@@ -290,6 +289,9 @@ sleep 3
 
 git clone https://github.com/Tecne-Collective/internal_scripts.git
 /bin/bash internal_scripts/install_server_u20.sh
+
+rm -rf ./internal_scripts
+rm -rf ./temporal
 
 echo " "
 echo "-------------------------------------------------------------------------"

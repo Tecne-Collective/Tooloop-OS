@@ -16,15 +16,64 @@
             label="Settings"
             execute="/bin/bash /home/tooloop/.config/openbox/settings-menu.sh"
         />
+        <menu icon="/home/tooloop/.config/icons/menu_icon_tools.png" 
+            id="-protean-tools-menu" 
+            label="Protean Tools">
+            >
+            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="Teamviewer">
+                <action name="Execute">
+                    <execute>teamviewer</execute>
+                </action>
+            </item>
+            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="PyCharm">
+                <action name="Execute">
+                    <execute>pycharm-community</execute>
+                </action>
+            </item>
+            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="Sublime">
+                <action name="Execute">
+                    <execute>subl</execute>
+                </action>
+            </item>
+            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="Atom">
+                <action name="Execute">
+                    <execute>atom</execute>
+                </action>
+            </item>
+            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="VLC">
+                <action name="Execute">
+                    <execute>vlc</execute>
+                </action>
+            </item>
+            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="meld">
+                <action name="Execute">
+                    <execute>meld</execute>
+                </action>
+            </item>
 
+        </menu>
         <menu
             icon="/home/tooloop/.config/icons/menu_icon_tools.png" 
             id="tools-menu" 
             label="Tools">
-
+            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="Obconf">
+                <action name="Execute">
+                    <execute>obconf</execute>
+                </action>
+            </item>
+            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="Obmenu">
+                <action name="Execute">
+                    <execute>obmenu</execute>
+                </action>
+            </item>
+            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="File Manager">
+                <action name="Execute">
+                    <execute>thunar</execute>
+                </action>
+            </item>
             <item icon="/home/tooloop/.config/icons/menu_icon_clock.png" label="Clock">
                 <action name="Execute">
-                    <execute>tooloop-clock</execute>'
+                    <execute>tooloop-clock</execute>
                 </action>
             </item>
             <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="Terminal">

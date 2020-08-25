@@ -215,7 +215,9 @@ cp -R "$SCRIPT_PATH"/include/clearsans /usr/share/fonts/truetype
 # Copy scripts
 mkdir -p /opt/tooloop
 cp -R "$SCRIPT_PATH"/files/scripts /opt/tooloop
+cp -R "$SCRIPT_PATH"/files/scripts /usr/bin
 chmod +x /opt/tooloop/scripts/*
+chmod +x /usr/bin/tooloop*
 sleep 3
 
 # Get settings server

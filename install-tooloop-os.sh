@@ -73,17 +73,31 @@ apt install -y \
   bash-completion \
   nano \
   psmisc \
-  pcregrep
+  pcregrep \
+  mlocate \
+  xterm \
+  python3.8-dev \
+  python3-pip \
+  net-tools \
+  thunar \
+  dos2unix
 
 sleep 3
 
 #install obmenu-generator to replace obmenu, as ubuntu 20 doesnt include python2
-echo 'deb http://download.opensuse.org/repositories/home:/Head_on_a_Stick:/obmenu-generator/Debian_10/ /' > /etc/apt/sources.list.d/home:Head_on_a_Stick:obmenu-generator.list
+#echo 'deb http://download.opensuse.org/repositories/home:/Head_on_a_Stick:/obmenu-generator/Debian_10/ /' > /etc/apt/sources.list.d/home:Head_on_a_Stick:obmenu-generator.list
+#mkdir temporal
+#wget -nv https://download.opensuse.org/repositories/home:Head_on_a_Stick:obmenu-generator/Debian_10/Release.key -O ./temporal/Release.key
+#apt-key add - < ./temporal/Release.key
+#apt-get update
+#apt-get install obmenu-generator
+
+#INSTALL obmenu
 mkdir temporal
-wget -nv https://download.opensuse.org/repositories/home:Head_on_a_Stick:obmenu-generator/Debian_10/Release.key -O ./temporal/Release.key
-apt-key add - < ./temporal/Release.key
-apt-get update
-apt-get install obmenu-generator
+cd temporal
+git clone https://github.com/keithbowes/obmenu.git
+cd obmenu
+python setup.py install
 sleep 3
 
 # ------------------------------------------------------------------------------

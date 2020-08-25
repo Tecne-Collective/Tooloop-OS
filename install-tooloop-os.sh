@@ -97,7 +97,7 @@ mkdir temporal
 cd temporal
 git clone https://github.com/keithbowes/obmenu.git
 cd obmenu
-python setup.py install
+python3 setup.py install
 sleep 3
 
 # ------------------------------------------------------------------------------

@@ -236,8 +236,8 @@ sleep 3
 
 # Copy scripts (copying file to bin as paths are failing)
 mkdir -p /opt/tooloop
-cp -R "$SCRIPT_PATH"/files/scripts /opt/tooloop
-cp -R "$SCRIPT_PATH"/files/scripts /usr/bin
+cp -R "$SCRIPT_PATH"/files/scripts/ /opt/tooloop
+cp -R "$SCRIPT_PATH"/files/scripts/ /usr/bin
 chmod +x /opt/tooloop/scripts/*
 chmod +x /usr/bin/tooloop*
 sleep 3

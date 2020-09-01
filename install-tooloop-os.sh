@@ -2,7 +2,7 @@
 
 # Say hi
 echo "-------------------------------------------------------------------------"
-echo "Tooloop OS - Tecné Version for Ubuntu 20"
+echo "Tooloop OS - Tecné Collective Version for Ubuntu 20"
 echo "-------------------------------------------------------------------------"
 echo " "
 
@@ -15,6 +15,11 @@ if [ -z "$SCRIPT_PATH" ] ; then
   exit 1  # fail
 fi
 
+#gets the current user
+MYUSER=$SUDO_USER
+#flag to be used in sed to replace the user
+TOOLOOPFLAG="TOOLOOPFLAG"
+
 # exit if we’re not root
 if [ $EUID != 0 ]; then
   echo "This script must be run as root."
@@ -22,7 +27,15 @@ if [ $EUID != 0 ]; then
     exit 1
 fi
 
-sudo -u mkdir /assets
+#check for the directory if the user prefers to use a single partition (default in ubuntu20)
+if [ -d "/assets" ] 
+then
+    echo "Directory /assets exists." 
+else
+    sudo -u mkdir /assets
+    echo "Error: Directory /path/to/dir does not exists."
+fi
+
 
 # ------------------------------------------------------------------------------
 # Update
@@ -82,22 +95,18 @@ apt install -y \
   thunar \
   dos2unix
 
+#added a few tools taht we use constantly and a light weight file manager (thunar)
+
 sleep 3
 
-#install obmenu-generator to replace obmenu, as ubuntu 20 doesnt include python2
-#echo 'deb http://download.opensuse.org/repositories/home:/Head_on_a_Stick:/obmenu-generator/Debian_10/ /' > /etc/apt/sources.list.d/home:Head_on_a_Stick:obmenu-generator.list
-#mkdir temporal
-#wget -nv https://download.opensuse.org/repositories/home:Head_on_a_Stick:obmenu-generator/Debian_10/Release.key -O ./temporal/Release.key
-#apt-key add - < ./temporal/Release.key
-#apt-get update
-#apt-get install obmenu-generator
 
-#INSTALL obmenu
-mkdir temporal
-cd temporal
+#INSTALL obmenu, with a rabnch for python 3.5 as ubuntu20 doesn't include python2 anymore
+mkdir temp
+cd temp
 git clone https://github.com/keithbowes/obmenu.git
 cd obmenu
 python3 setup.py install
+rm -rf temp
 sleep 3
 
 # ------------------------------------------------------------------------------
@@ -110,14 +119,14 @@ echo "-------------------------------------------------------------------------"
 echo " "
 sleep 3
 
-# Allow shutdown commands without password and add tooloop scripts path to sudo
-cat >/etc/sudoers.d/tooloop <<EOF
+# Allow shutdown commands without password and add tooloop scripts path to sudo, now supports the user taht is installing the script
+cat >/etc/sudoers.d/$MYUSER <<EOF
 # find and autocomplete tooloop scripts using sudo
 Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/opt/tooloop/scripts"
 # make an alias for x11vnc start and stop commands
 Cmnd_Alias VNC_CMNDS = /bin/systemctl start x11vnc, /bin/systemctl stop x11vnc
 # allow these commands without using a password
-tooloop     ALL=(ALL) NOPASSWD: /sbin/poweroff, /sbin/reboot, /sbin/shutdown, VNC_CMNDS
+$MYUSER     ALL=(ALL) NOPASSWD: /sbin/poweroff, /sbin/reboot, /sbin/shutdown, VNC_CMNDS
 EOF
 sleep 3
 
@@ -126,9 +135,12 @@ mkdir -p /etc/systemd/system/getty\@tty1.service.d
 cat >/etc/systemd/system/getty\@tty1.service.d/autologin.conf <<EOF
 [Service]
 ExecStart=
-ExecStart=/sbin/agetty --skip-login --noissue --autologin "tooloop" %I
+ExecStart=/sbin/agetty --skip-login --noissue --autologin "$MYUSER" %I
 EOF
 sleep 3
+
+#patch for autologin in ubuntu20
+#TODO
 
 # Create the /assets folder sctructure
 mkdir -p /assets/presentation
@@ -145,7 +157,6 @@ set /files/etc/default/grub/GRUB_CMDLINE_LINUX \""console=tty12\""
 set /files/etc/default/grub/GRUB_CMDLINE_LINUX_DEFAULT \""quiet loglevel=3 vga=current rd.systemd.show_status=false rd.udev.log-priority=3\""
 save
 EOF
-sleep 3
 
 update-grub2
 
@@ -178,8 +189,8 @@ E.g. tooloop-presentation-stop, tooloop-settings
 EOF
 
 # Get rid of the last login message
-touch /home/tooloop/.hushlogin
-chown tooloop:tooloop /home/tooloop/.hushlogin
+touch /home/$MYUSER/.hushlogin
+chown $MYUSER:$MYUSER /home/$MYUSER/.hushlogin
 
 # Hide verbose kernel messages
 cat >/etc/sysctl.d/20-quiet-printk.conf <<EOF
@@ -187,8 +198,9 @@ kernel.printk = 3 3 3 3
 EOF
 
 # Copy bash config
-cp "$SCRIPT_PATH"/files/bashrc /home/tooloop/.bashrc
-chown tooloop:tooloop /home/tooloop/.bashrc
+cp "$SCRIPT_PATH"/files/bashrc /home/$MYUSER/.bashrc
+chown $MYUSER:$MYUSER /home/$MYUSER/.bashrc
+#replace username
 sleep 3
 
 # Copy Openbox theme
@@ -196,14 +208,17 @@ cp -R "$SCRIPT_PATH"/files/openbox-theme/* /usr/share/themes/
 sleep 3
 
 # Copy Openbox config
-mkdir -p /home/tooloop/.config
-mkdir -p /home/tooloop/.config/openbox
-cp -R "$SCRIPT_PATH"/files/openbox-config/* /home/tooloop/.config/openbox/
+mkdir -p /home/$MYUSER/.config
+mkdir -p /home/$MYUSER/.config/openbox
+cp -R "$SCRIPT_PATH"/files/openbox-config/* /home/$MYUSER/.config/openbox/
+
+
+
 sleep 3
 
 # Copy Openbox menu icons
-mkdir -p /home/tooloop/.config/icons
-cp -R "$SCRIPT_PATH"/files/openbox-menu-icons/* /home/tooloop/.config/icons/
+mkdir -p /home/$MYUSER/.config/icons
+cp -R "$SCRIPT_PATH"/files/openbox-menu-icons/* /home/$MYUSER/.config/icons/
 
 # Copy start- and stop-presentation scripts
 cp "$SCRIPT_PATH"/files/start-presentation.sh /assets/presentation/
@@ -212,10 +227,10 @@ cp "$SCRIPT_PATH"/files/stop-presentation.sh /assets/presentation/
 # Copy Clear Sans font
 cp -R "$SCRIPT_PATH"/include/clearsans /usr/share/fonts/truetype
 
-# Copy scripts
+# Copy scripts (copying file to bin as paths are failing)
 mkdir -p /opt/tooloop
 cp -R "$SCRIPT_PATH"/files/scripts /opt/tooloop
-cp -R "$SCRIPT_PATH"/files/scripts/* /usr/local/bin
+cp -R "$SCRIPT_PATH"/files/scripts /usr/local/bin
 chmod +x /opt/tooloop/scripts/*
 chmod +x /usr/local/bin/tooloop*
 sleep 3
@@ -236,7 +251,7 @@ After=network.target
 
 [Service]
 Environment=DISPLAY=:0
-Environment=XAUTHORITY=/home/tooloop/.Xauthority
+Environment=XAUTHORITY=/home/$MYUSER/.Xauthority
 ExecStart=/usr/bin/python /opt/tooloop/settings-server/tooloop-settings-server.py
 Restart=always
 
@@ -245,6 +260,7 @@ WantedBy=graphical.target
 EOF
 
 # Enable and start the service
+systemctl daemon-reload
 systemctl enable tooloop-settings-server
 systemctl start tooloop-settings-server
 
@@ -270,9 +286,9 @@ Description=x11vnc screen sharing service
 
 [Service]
 Environment=DISPLAY=:0
-Environment=XAUTHORITY=/home/tooloop/.Xauthority
+Environment=XAUTHORITY=/home/$MYUSER/.Xauthority
 Type=simple
-ExecStart=/bin/sh -c '/usr/bin/x11vnc -shared -forever -passwd tooloop'
+ExecStart=/bin/sh -c '/usr/bin/x11vnc -shared -forever'
 Restart=on-success
 SuccessExitStatus=3
 
@@ -281,33 +297,27 @@ WantedBy=xsession.target
 EOF
 
 # Create a cronjob to take a screenshot every minute
-(crontab -u tooloop -l ; echo "* * * * * env DISPLAY=:0.0 /opt/tooloop/scripts/tooloop-screenshot") | crontab -u tooloop -
+(crontab -u $MYUSER -l ; echo "* * * * * env DISPLAY=:0.0 /opt/tooloop/scripts/tooloop-screenshot") | crontab -u $MYUSER -
 sleep 3
 
 # Create a cronjob to clean up screenshots every day at 00:00
-(crontab -u tooloop -l ; echo "0 0 * * * /opt/tooloop/scripts/tooloop-screenshots-clean") | crontab -u tooloop -
+(crontab -u $MYUSER -l ; echo "0 0 * * * /opt/tooloop/scripts/tooloop-screenshots-clean") | crontab -u $MYUSER -
 sleep 3
 
 # make Enttec USB DMX devices accessable to the tooloop user
-usermod -aG tty tooloop
-usermod -aG dialout tooloop
+usermod -aG tty $MYUSER
+usermod -aG dialout $MYUSER
 cat > /etc/udev/rules.d/75-permissions-enttec.rules <<EOF
 SUBSYSTEM=="usb", ACTION=="add|change", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", "MODE="0666"
 EOF
 
 # Chown things to the tooloop user
-chown -R tooloop:tooloop /assets/
-chown -R tooloop:tooloop /home/tooloop/
-chown -R tooloop:tooloop /opt/tooloop/
+chown -R $MYUSER:$MYUSER /assets/
+chown -R $MYUSER:$MYUSER /home/$MYUSER/
+chown -R $MYUSER:$MYUSER /opt/tooloop/
 
 apt autoremove
 sleep 3
-
-#git clone https://github.com/Tecne-Collective/internal_scripts.git
-#/bin/bash internal_scripts/install_server_u20.sh
-
-#rm -rf ./internal_scripts
-#rm -rf ./temporal
 
 echo " "
 echo "-------------------------------------------------------------------------"

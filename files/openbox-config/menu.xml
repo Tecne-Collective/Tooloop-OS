@@ -16,42 +16,7 @@
             label="Settings"
             execute="/bin/bash /home/tooloop/.config/openbox/settings-menu.sh"
         />
-        <menu icon="/home/tooloop/.config/icons/menu_icon_tools.png" 
-            id="-protean-tools-menu" 
-            label="Protean Tools">
-            >
-            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="Teamviewer">
-                <action name="Execute">
-                    <execute>teamviewer</execute>
-                </action>
-            </item>
-            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="PyCharm">
-                <action name="Execute">
-                    <execute>pycharm-community</execute>
-                </action>
-            </item>
-            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="Sublime">
-                <action name="Execute">
-                    <execute>subl</execute>
-                </action>
-            </item>
-            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="Atom">
-                <action name="Execute">
-                    <execute>atom</execute>
-                </action>
-            </item>
-            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="VLC">
-                <action name="Execute">
-                    <execute>vlc</execute>
-                </action>
-            </item>
-            <item icon="/home/tooloop/.config/icons/menu_icon_terminal.png" label="meld">
-                <action name="Execute">
-                    <execute>meld</execute>
-                </action>
-            </item>
-
-        </menu>
+        <!-- PROTEAN -->
         <menu
             icon="/home/tooloop/.config/icons/menu_icon_tools.png" 
             id="tools-menu" 

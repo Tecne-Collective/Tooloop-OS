@@ -35,7 +35,7 @@ else
     mkdir /assets
     echo "Creating: /assets"
 fi
-
+sleep 3
 
 # ------------------------------------------------------------------------------
 # Update
@@ -45,6 +45,7 @@ echo "-------------------------------------------------------------------------"
 echo "1/3 --- Updating system"
 echo "-------------------------------------------------------------------------"
 echo " "
+sleep 3
 
 # Updating system first
 apt update -y
@@ -59,6 +60,7 @@ echo "-------------------------------------------------------------------------"
 echo "2/3 --- Installing base packages"
 echo "-------------------------------------------------------------------------"
 echo " "
+sleep 3
 
 # Install base packages
 apt install -y \
@@ -96,7 +98,6 @@ apt install -y \
   dos2unix
 
 #added a few tools taht we use constantly and a light weight file manager (thunar)
-
 sleep 3
 
 
@@ -148,6 +149,7 @@ mkdir -p /assets/data
 mkdir -p /assets/screenshots
 mkdir -p /assets/logs
 mkdir -p /assets/apps
+sleep 3
 
 # Silent boot
 augtool<<EOF
@@ -159,6 +161,7 @@ save
 EOF
 
 update-grub2
+sleep 3
 
 # Nice SSH banner
 augtool<<EOF
@@ -187,6 +190,7 @@ E.g. tooloop-presentation-stop, tooloop-settings
 -------------------------------------------------------------------------
 
 EOF
+sleep 3
 
 # Get rid of the last login message
 touch /home/$MYUSER/.hushlogin
@@ -196,6 +200,7 @@ chown $MYUSER:$MYUSER /home/$MYUSER/.hushlogin
 cat >/etc/sysctl.d/20-quiet-printk.conf <<EOF
 kernel.printk = 3 3 3 3
 EOF
+sleep 3
 
 # Copy bash config
 cp "$SCRIPT_PATH"/files/bashrc /home/$MYUSER/.bashrc
@@ -211,9 +216,6 @@ sleep 3
 mkdir -p /home/$MYUSER/.config
 mkdir -p /home/$MYUSER/.config/openbox
 cp -R "$SCRIPT_PATH"/files/openbox-config/* /home/$MYUSER/.config/openbox/
-
-
-
 sleep 3
 
 # Copy Openbox menu icons
@@ -226,6 +228,7 @@ cp "$SCRIPT_PATH"/files/stop-presentation.sh /assets/presentation/
 
 # Copy Clear Sans font
 cp -R "$SCRIPT_PATH"/include/clearsans /usr/share/fonts/truetype
+sleep 3
 
 # Copy scripts (copying file to bin as paths are failing)
 mkdir -p /opt/tooloop
@@ -237,6 +240,7 @@ sleep 3
 
 # Get settings server
 git clone https://github.com/Tecne-Collective/Tooloop-Settings-Server.git /opt/tooloop/settings-server
+sleep 3
 
 # Install dependencies
 /bin/bash /opt/tooloop/settings-server/install-dependencies.sh
@@ -295,6 +299,7 @@ SuccessExitStatus=3
 [Install]
 WantedBy=xsession.target
 EOF
+sleep 3
 
 # Create a cronjob to take a screenshot every minute
 (crontab -u $MYUSER -l ; echo "* * * * * env DISPLAY=:0.0 /opt/tooloop/scripts/tooloop-screenshot") | crontab -u $MYUSER -
@@ -314,6 +319,7 @@ EOF
 # Chown things to the tooloop user
 chown -R $MYUSER:$MYUSER /assets
 chown -R $MYUSER:$MYUSER /home/$MYUSER
+sleep 3
 
 apt autoremove
 sleep 3
@@ -324,7 +330,7 @@ echo "Done."
 echo "-------------------------------------------------------------------------"
 echo " "
 
-sleep 1
+sleep 3
 
 echo "We will reboot now into your Tooloop OS installation."
 echo "Enjoy ;-)"

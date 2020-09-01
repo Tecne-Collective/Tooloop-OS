@@ -126,6 +126,7 @@ cat >/etc/sudoers.d/$MYUSER <<EOF
 Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin:/opt/tooloop/scripts"
 # make an alias for x11vnc start and stop commands
 Cmnd_Alias VNC_CMNDS = /bin/systemctl start x11vnc, /bin/systemctl stop x11vnc
+#TEAMVIEWER
 # allow these commands without using a password
 $MYUSER     ALL=(ALL) NOPASSWD: /sbin/poweroff, /sbin/reboot, /sbin/shutdown, VNC_CMNDS
 EOF
@@ -142,6 +143,9 @@ sleep 3
 
 #patch for autologin in ubuntu20
 #TODO
+sed -i 's/#  AutomaticLoginEnable = true/AutomaticLoginEnable = true/' /etc/gdm3/custom.conf
+sed -i 's/#  AAutomaticLogin = user1/AutomaticLogin = $MYUSER/' /etc/gdm3/custom.conf
+
 
 # Create the /assets folder sctructure
 mkdir -p /assets/presentation

@@ -32,8 +32,8 @@ if [ -d "/assets" ]
 then
     echo "Directory /assets exists." 
 else
-    sudo mkdir /assets
-    echo "Error: Directory /path/to/dir does not exists."
+    mkdir /assets
+    echo "Creating: /assets"
 fi
 
 

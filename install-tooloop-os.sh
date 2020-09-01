@@ -32,7 +32,7 @@ if [ -d "/assets" ]
 then
     echo "Directory /assets exists." 
 else
-    sudo -u mkdir /assets
+    sudo mkdir /assets
     echo "Error: Directory /path/to/dir does not exists."
 fi
 
@@ -312,9 +312,8 @@ SUBSYSTEM=="usb", ACTION=="add|change", ATTRS{idVendor}=="0403", ATTRS{idProduct
 EOF
 
 # Chown things to the tooloop user
-chown -R $MYUSER:$MYUSER /assets/
-chown -R $MYUSER:$MYUSER /home/$MYUSER/
-chown -R $MYUSER:$MYUSER /opt/tooloop/
+chown -R $MYUSER:$MYUSER /assets
+chown -R $MYUSER:$MYUSER /home/$MYUSER
 
 apt autoremove
 sleep 3

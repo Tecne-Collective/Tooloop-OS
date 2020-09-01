@@ -233,9 +233,9 @@ sleep 3
 # Copy scripts (copying file to bin as paths are failing)
 mkdir -p /opt/tooloop
 cp -R "$SCRIPT_PATH"/files/scripts /opt/tooloop
-cp -R "$SCRIPT_PATH"/files/scripts /usr/local/bin
+cp -R "$SCRIPT_PATH"/files/scripts /usr/bin
 chmod +x /opt/tooloop/scripts/*
-chmod +x /usr/local/bin/tooloop*
+chmod +x /usr/bin/tooloop*
 sleep 3
 
 # Get settings server
@@ -322,6 +322,8 @@ chown -R $MYUSER:$MYUSER /home/$MYUSER
 sleep 3
 
 apt autoremove
+updatedb
+
 sleep 3
 
 echo " "

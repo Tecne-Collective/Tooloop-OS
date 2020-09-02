@@ -144,7 +144,7 @@ sleep 3
 #patch for autologin in ubuntu20
 #TODO
 sed -i 's/#  AutomaticLoginEnable = true/AutomaticLoginEnable = true/' /etc/gdm3/custom.conf
-sed -i 's/#  AAutomaticLogin = user1/AutomaticLogin = $MYUSER/' /etc/gdm3/custom.conf
+sed -i 's/#  AutomaticLogin = user1/AutomaticLogin = $MYUSER/' /etc/gdm3/custom.conf
 
 
 # Create the /assets folder sctructure
@@ -236,8 +236,8 @@ sleep 3
 
 # Copy scripts (copying file to bin as paths are failing)
 mkdir -p /opt/tooloop
-cp -R "$SCRIPT_PATH"/files/scripts/ /opt/tooloop/
-cp -R "$SCRIPT_PATH"/files/scripts/ /usr/bin/
+cp -R "$SCRIPT_PATH"/files/scripts /opt/tooloop/
+cp -R "$SCRIPT_PATH"/files/scripts/* /usr/bin/
 chmod +x /opt/tooloop/scripts/*
 chmod +x /usr/bin/tooloop*
 sleep 3

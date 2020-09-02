@@ -220,6 +220,10 @@ sleep 3
 mkdir -p /home/$MYUSER/.config
 mkdir -p /home/$MYUSER/.config/openbox
 cp -R "$SCRIPT_PATH"/files/openbox-config/* /home/$MYUSER/.config/openbox/
+#replace user in menu.xml
+sed -i 's/$TOOLOOPFLAG/$MYUSER/' /home/$MYUSER/.config/openbox/menu.xml
+sed -i 's/$TOOLOOPFLAG/$MYUSER/' /home/$MYUSER/.config/openbox/settings-menu.sh
+
 sleep 3
 
 # Copy Openbox menu icons

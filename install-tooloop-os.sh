@@ -144,7 +144,14 @@ sleep 3
 #patch for autologin in ubuntu20
 #TODO
 sed -i 's/#  AutomaticLoginEnable = true/AutomaticLoginEnable = true/' /etc/gdm3/custom.conf
-sed -i 's/#  AutomaticLogin = user1/AutomaticLogin = $MYUSER/' /etc/gdm3/custom.conf
+sed -i 's/#  AutomaticLogin = user1/AutomaticLogin = ${MYUSER}/' /etc/gdm3/custom.conf
+
+#add tooloop as deafult startup widows manager
+touch /home/$MYUSER/.xinitrc
+chown $MYUSER:$MYUSER /home/$MYUSER/.xinitrc
+cat >home/$MYUSER/.xinitrc <<EOF
+exec openbox-session
+EOF
 
 
 # Create the /assets folder sctructure
@@ -217,12 +224,13 @@ cp -R "$SCRIPT_PATH"/files/openbox-theme/* /usr/share/themes/
 sleep 3
 
 # Copy Openbox config
+echo "copying openbox config"
 mkdir -p /home/$MYUSER/.config
 mkdir -p /home/$MYUSER/.config/openbox
 cp -R "$SCRIPT_PATH"/files/openbox-config/* /home/$MYUSER/.config/openbox/
 #replace user in menu.xml
-sed -i 's/$TOOLOOPFLAG/$MYUSER/' /home/$MYUSER/.config/openbox/menu.xml
-sed -i 's/$TOOLOOPFLAG/$MYUSER/' /home/$MYUSER/.config/openbox/settings-menu.sh
+sed -i 's/${TOOLOOPFLAG}/${MYUSER}/' /home/$MYUSER/.config/openbox/menu.xml
+sed -i 's/${TOOLOOPFLAG}/${MYUSER}/' /home/$MYUSER/.config/openbox/settings-menu.sh
 
 sleep 3
 
@@ -263,7 +271,7 @@ After=network.target
 
 [Service]
 Environment=DISPLAY=:0
-Environment=XAUTHORITY=/home/$MYUSER/.Xauthority
+Environment=XAUTHORITY=/home/${MYUSER}/.Xauthority
 ExecStart=/usr/bin/python /opt/tooloop/settings-server/tooloop-settings-server.py
 Restart=always
 
@@ -298,7 +306,7 @@ Description=x11vnc screen sharing service
 
 [Service]
 Environment=DISPLAY=:0
-Environment=XAUTHORITY=/home/$MYUSER/.Xauthority
+Environment=XAUTHORITY=/home/${MYUSER}/.Xauthority
 Type=simple
 ExecStart=/bin/sh -c '/usr/bin/x11vnc -shared -forever'
 Restart=on-success

@@ -335,6 +335,9 @@ chown -R $MYUSER:$MYUSER /assets
 chown -R $MYUSER:$MYUSER /home/$MYUSER
 sleep 3
 
+#configure timezone
+dpkg-reconfigure tzdata
+
 apt autoremove
 updatedb
 

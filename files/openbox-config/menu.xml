@@ -43,7 +43,7 @@
             </item>
             <item icon="/home/TOOLOOPFLAG/.config/icons/menu_icon_terminal.png" label="Terminal">
                 <action name="Execute">
-                    <execute>tooloop-terminal</execute>
+                    <execute>xterm</execute>
                 </action>
             </item>
             <item icon="/home/TOOLOOPFLAG/.config/icons/menu_icon_browser.png" label="Browser">
